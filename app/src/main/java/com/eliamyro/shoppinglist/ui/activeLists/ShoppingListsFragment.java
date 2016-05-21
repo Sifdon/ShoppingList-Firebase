@@ -12,6 +12,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.eliamyro.shoppinglist.R;
+import com.eliamyro.shoppinglist.model.ShoppingList;
 import com.eliamyro.shoppinglist.utils.Constants;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -28,6 +29,7 @@ public class ShoppingListsFragment extends Fragment {
     private final static String TAG = ShoppingListsFragment.class.getSimpleName();
     private ListView mListView;
     private TextView mTextViewListName;
+    private TextView mTextViewOwner;
 
     public ShoppingListsFragment() {
         /* Required empty public constructor */
@@ -69,13 +71,22 @@ public class ShoppingListsFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_shopping_lists, container, false);
         initializeScreen(rootView);
 
-        Firebase listNameRef = new Firebase(Constants.FIREBASE_URL).child(Constants.FIREBASE_PROPERTY_LISTNAME);
+        Firebase listNameRef = new Firebase(Constants.FIREBASE_URL).child("activeList");
         listNameRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.i(TAG, "The data changed");
-                String listName = (String) dataSnapshot.getValue();
-                mTextViewListName.setText(listName);
+                // You can use getValue to deserialize the data at dataSnapshot
+                // into a ShoppingList.
+                ShoppingList shoppingList = dataSnapshot.getValue(ShoppingList.class);
+
+                // If there was no data at the location we added the listener, then
+                // shoppingList will be null.
+                if (shoppingList != null) {
+                    // If there was data, take the TextViews and set the appropriate values.
+                    mTextViewListName.setText(shoppingList.getListName());
+                    mTextViewOwner.setText(shoppingList.getOwner());
+                }
             }
 
             @Override
@@ -109,5 +120,6 @@ public class ShoppingListsFragment extends Fragment {
     private void initializeScreen(View rootView) {
         mListView = (ListView) rootView.findViewById(R.id.list_view_active_lists);
         mTextViewListName = (TextView) rootView.findViewById(R.id.text_view_list_name);
+        mTextViewOwner = (TextView) rootView.findViewById(R.id.text_view_created_by_user);
     }
 }

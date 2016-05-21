@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.eliamyro.shoppinglist.R;
+import com.eliamyro.shoppinglist.model.ShoppingList;
 import com.eliamyro.shoppinglist.utils.Constants;
 import com.firebase.client.Firebase;
 
@@ -95,8 +96,16 @@ public class AddListDialogFragment extends DialogFragment {
      * Add new active list
      */
     public void addShoppingList() {
+        // Get the reference to the root node in Firebase.
         Firebase ref = new Firebase(Constants.FIREBASE_URL);
+        // Get the string that the user entered into the EditText.
         String userEnteredName = mEditTextListName.getText().toString();
-        ref.child(Constants.FIREBASE_PROPERTY_LISTNAME).setValue(userEnteredName);
+        // Goto to the "listName" child node of the root node.
+        // This will create the node for you if it doesn't already exist.
+        // Then using the setValue method it will set value to the node
+        String owner = "Anonymous Owner";
+        ShoppingList currentList = new ShoppingList(userEnteredName, owner);
+        ref.child("activeList").setValue(currentList);
+//        ref.child(Constants.FIREBASE_PROPERTY_LISTNAME).setValue(userEnteredName);
     }
 }
