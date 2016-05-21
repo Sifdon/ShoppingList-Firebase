@@ -14,10 +14,13 @@ import android.widget.TextView;
 import com.eliamyro.shoppinglist.R;
 import com.eliamyro.shoppinglist.model.ShoppingList;
 import com.eliamyro.shoppinglist.utils.Constants;
+import com.eliamyro.shoppinglist.utils.Utils;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+
+import java.util.Date;
 
 
 /**
@@ -30,6 +33,7 @@ public class ShoppingListsFragment extends Fragment {
     private ListView mListView;
     private TextView mTextViewListName;
     private TextView mTextViewOwner;
+    private TextView mTextViewEditTime;
 
     public ShoppingListsFragment() {
         /* Required empty public constructor */
@@ -86,6 +90,12 @@ public class ShoppingListsFragment extends Fragment {
                     // If there was data, take the TextViews and set the appropriate values.
                     mTextViewListName.setText(shoppingList.getListName());
                     mTextViewOwner.setText(shoppingList.getOwner());
+
+                    if (shoppingList.getTimestampLastChanged() != null)
+                        mTextViewEditTime.setText(Utils.SIMPLE_DATE_FORMAT.format(new Date(shoppingList.getTimestampLastChangedLong())));
+                    else
+                        mTextViewEditTime.setText("");
+
                 }
             }
 
@@ -121,5 +131,6 @@ public class ShoppingListsFragment extends Fragment {
         mListView = (ListView) rootView.findViewById(R.id.list_view_active_lists);
         mTextViewListName = (TextView) rootView.findViewById(R.id.text_view_list_name);
         mTextViewOwner = (TextView) rootView.findViewById(R.id.text_view_created_by_user);
+        mTextViewEditTime = (TextView) rootView.findViewById(R.id.text_view_edit_time);
     }
 }

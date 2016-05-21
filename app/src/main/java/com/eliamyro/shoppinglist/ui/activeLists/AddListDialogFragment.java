@@ -17,6 +17,9 @@ import com.eliamyro.shoppinglist.R;
 import com.eliamyro.shoppinglist.model.ShoppingList;
 import com.eliamyro.shoppinglist.utils.Constants;
 import com.firebase.client.Firebase;
+import com.firebase.client.ServerValue;
+
+import java.util.HashMap;
 
 /**
  * Created by Elias Myronidis on 21/5/16.
@@ -104,6 +107,7 @@ public class AddListDialogFragment extends DialogFragment {
         // This will create the node for you if it doesn't already exist.
         // Then using the setValue method it will set value to the node
         String owner = "Anonymous Owner";
+
         ShoppingList currentList = new ShoppingList(userEnteredName, owner);
         ref.child("activeList").setValue(currentList);
 //        ref.child(Constants.FIREBASE_PROPERTY_LISTNAME).setValue(userEnteredName);
